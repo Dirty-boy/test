@@ -1,0 +1,69 @@
+{% extends 'main/main.html' %}
+{% block named %}
+    {{ name }}
+{% endblock %}
+{% block main %}
+
+    <div class="container-fluid" style="background: #0f0f0f;height: 50px">
+        <div class="row">
+            <a href="{% url 'main:labor' %}"><button class="col-xs-2 btn btn-warning" style="top: 7px;left: 7px">添加用户</button></a>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <form action="" >
+        <select name="action" id="">
+            <option value="">关键字</option>
+
+            <option value="qq__contains">qq</option>
+            <option value="name__contains">姓名</option>
+        </select>
+        <input type="text" class="form-control col-xs-4"  name="kw">
+        <button class="btn btn-primary" >go</button>
+
+    </form>
+    </div>
+    <p></p>
+    <form action="{% url 'main:changed' %}" method="post">
+    {% csrf_token %}
+    {% if tag == 1 %}
+        <button name="pcpr">公户转私户</button>
+        {% else %}
+            <button name="prcp">私户转公户</button>
+    {% endif %}
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>序号</th>
+            <th>QQ</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>客户来源</th>
+            <th>咨询课程</th>
+            <th>状态</th>
+            <th>销售</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in msg %}
+            <tr>
+            <td> <input type="checkbox" name="cids" value="{{ customer.id }}"></td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ customer.qq }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.get_sex_display }}</td>
+            <td>{{ customer.get_source_display }}</td>
+            <td>{{ customer.get_course_display }}</td>
+            <td>{{ customer.get_status_display }}</td>
+            <td>{{ customer.consultant.username|default:'暂无' }}</td>
+            <td>
+                <a href="{% url 'main:alter' customer.id %}" title="编辑"><i class="fa fa-pencil"></i>&nbsp;</a>
+            </td>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </form>
+    {{ low|safe }}
+{% endblock %}
